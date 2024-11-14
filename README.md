@@ -92,7 +92,6 @@ ROUND(COUNTIF(ecommerce.tax_value IS NOT NULL) * 100.0 / COUNT(*), 2) AS ecommer
 ROUND(COUNTIF(ecommerce.transaction_id IS NOT NULL) * 100.0 / COUNT(*), 2) AS ecommerce_transaction_id,
 ROUND(COUNTIF(ecommerce.unique_items IS NOT NULL) * 100.0 / COUNT(*), 2) AS ecommerce_unique_items,
 FROM `project.analytics_123.events_*`
-  UNNEST(event_params) AS events,
 WHERE
   regexp_extract(_table_suffix, '[0-9]+') BETWEEN format_date('%Y%m%d', current_date() - 1) AND format_date('%Y%m%d', current_date())
   group by event_name
@@ -110,8 +109,6 @@ ROUND(COUNTIF(is_active_user IS NOT NULL) * 100.0 / COUNT(*), 2) AS is_active_us
 ROUND(COUNTIF(user_id IS NOT NULL) * 100.0 / COUNT(*), 2) AS user_id,
 ROUND(COUNTIF(user_first_touch_timestamp IS NOT NULL) * 100.0 / COUNT(*), 2) AS user_first_touch_timestamp,
 FROM `project.analytics_123.events_*`
-  UNNEST(event_params) AS events,
-  UNNEST(items) AS items
 WHERE
   regexp_extract(_table_suffix, '[0-9]+') BETWEEN format_date('%Y%m%d', current_date() - 1) AND format_date('%Y%m%d', current_date())
   group by event_name
@@ -138,7 +135,6 @@ ROUND(COUNTIF(event_params.value.int_value IS NOT NULL) * 100.0 / COUNT(*), 2) A
 ROUND(COUNTIF(event_params.value.double_value IS NOT NULL) * 100.0 / COUNT(*), 2) AS event_params_value_double_value,
 ROUND(COUNTIF(event_params.value.float_value IS NOT NULL) * 100.0 / COUNT(*), 2) AS event_params_value_float_value,
 FROM `project.analytics_123.events_*`
-  UNNEST(event_params) AS event_params
 WHERE
   regexp_extract(_table_suffix, '[0-9]+') BETWEEN format_date('%Y%m%d', current_date() - 1) AND format_date('%Y%m%d', current_date())
   group by event_name
