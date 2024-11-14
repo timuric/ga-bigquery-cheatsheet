@@ -206,8 +206,7 @@ limit 100
 ### Funnel Analysis
 
 ### Checkout by Device
-```
--- round numbers to 2 percision
+```sql
 SELECT
     device.category,
     count(DISTINCT CASE
