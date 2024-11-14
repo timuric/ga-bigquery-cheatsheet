@@ -12,6 +12,7 @@ Cheat sheet for Bigquery using Google Analytics dataset
   - [Device](#device)
   - [Geo](#geo)
 - [Funnel Analysis](#funnel-analysis)
+  - [Checkout by Device](#checkout-by-device)
   - [Checkout by Item Quantity](#checkout-by-item-quantity)
   - [Checkout by Basket Size](#checkout-by-basket-size)
 
