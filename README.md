@@ -1,7 +1,18 @@
 # Google Analytics Cookbook for BigQuery
 Cheat sheet for Bigquery using Google Analytics dataset
 
-## Dates ranges
+### Table of contents
+- [Working with dates](#working-with-dates)
+- [Data Quality Check](#data-quality-check)
+  - [Events](#events)
+  - [Ecommerce](#ecommerce)
+  - [User](#user)
+  - [Items](#items)
+  - [Traffic Source](#traffic-source)
+  - [Device](#device)
+  - [Geo](#geo)
+
+## Working with dates
 
 Relative date range:
 
