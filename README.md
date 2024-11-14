@@ -26,7 +26,7 @@ Items:
 ```sql
 select 
 event_name,
-count(*) as event_count,
+COUNT(*) as event_count,
 ROUND(COUNTIF(items.item_id IS NOT NULL) * 100.0 / COUNT(*),2 ) as items_item_id,
 ROUND(COUNTIF(items.item_name IS NOT NULL) * 100.0 / COUNT(*),2 ) as items_item_name,
 ROUND(COUNTIF(items.item_brand IS NOT NULL) * 100.0 / COUNT(*),2 ) as items_item_brand,
@@ -68,7 +68,7 @@ Ecommerce:
 ```sql
 select 
 event_name,
-count(*) as event_count,
+COUNT(*) as event_count,
 ROUND(COUNTIF(ecommerce.total_item_quantity IS NOT NULL) * 100.0 / COUNT(*), 2) AS ecommerce_total_item_quantity,
 ROUND(COUNTIF(ecommerce.purchase_revenue_in_usd IS NOT NULL) * 100.0 / COUNT(*), 2) AS ecommerce_purchase_revenue_in_usd,
 ROUND(COUNTIF(ecommerce.purchase_revenue IS NOT NULL) * 100.0 / COUNT(*), 2) AS ecommerce_purchase_revenue,
@@ -94,9 +94,10 @@ User:
 ```sql
 select 
 event_name,
-count(*) as event_count,
+COUNT(*) as event_count,
+ROUND(COUNTIF(is_active_user IS NOT NULL) * 100.0 / COUNT(*), 2) AS is_active_user,
 ROUND(COUNTIF(user_id IS NOT NULL) * 100.0 / COUNT(*), 2) AS user_id,
-ROUND(COUNTIF(user_pseudo_id IS NOT NULL) * 100.0 / COUNT(*), 2) AS user_pseudo_id,
+ROUND(COUNTIF(user_first_touch_timestamp IS NOT NULL) * 100.0 / COUNT(*), 2) AS user_first_touch_timestamp,
 FROM `project.analytics_123.events_*`
   UNNEST(event_params) AS events,
   UNNEST(items) AS items
@@ -112,7 +113,7 @@ Events:
 ```sql
 select 
 event_name,
-count(*) as event_count,
+COUNT(*) as event_count,
 ROUND(COUNTIF(events.value.double_value IS NOT NULL) * 100.0 / COUNT(*), 2) AS events_value_double_value,
 ROUND(COUNTIF(event_timestamp IS NOT NULL) * 100.0 / COUNT(*), 2) AS event_timestamp_null_check,
 ROUND(COUNTIF(event_date IS NOT NULL) * 100.0 / COUNT(*), 2) AS event_date_null_check,
@@ -132,7 +133,7 @@ Geo:
 ```sql
 select 
 event_name,
-count(*) as event_count,
+COUNT(*) as event_count,
 ROUND(COUNTIF(geo.continent IS NOT NULL) * 100.0 / COUNT(*), 2) AS geo_continent_null_check,
 ROUND(COUNTIF(geo.country IS NOT NULL) * 100.0 / COUNT(*), 2) AS geo_country_null_check,
 ROUND(COUNTIF(geo.region IS NOT NULL) * 100.0 / COUNT(*), 2) AS geo_region_null_check,
@@ -153,7 +154,7 @@ Traffic source:
 ```sql
 select 
 event_name,
-count(*) as event_count,
+COUNT(*) as event_count,
 ROUND(COUNTIF(traffic_source.name IS NOT NULL) * 100.0 / COUNT(*), 2) AS traffic_source_name,
 ROUND(COUNTIF(traffic_source.medium IS NOT NULL) * 100.0 / COUNT(*), 2) AS traffic_source_medium,
 ROUND(COUNTIF(traffic_source.source IS NOT NULL) * 100.0 / COUNT(*), 2) AS traffic_source_source,
@@ -170,7 +171,7 @@ Device:
 ```sql
 select 
 event_name,
-count(*) as event_count,
+COUNT(*) as event_count,
 ROUND(COUNTIF(device.operating_system IS NOT NULL) * 100.0 / COUNT(*), 2) AS device_operating_system_null_check,
 ROUND(COUNTIF(device.mobile_brand_name IS NOT NULL) * 100.0 / COUNT(*), 2) AS device_mobile_brand_name_null_check,
 ROUND(COUNTIF(device.mobile_model_name IS NOT NULL) * 100.0 / COUNT(*), 2) AS device_mobile_model_name_null_check,
