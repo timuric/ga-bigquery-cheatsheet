@@ -119,10 +119,15 @@ ROUND(COUNTIF(event_timestamp IS NOT NULL) * 100.0 / COUNT(*), 2) AS event_times
 ROUND(COUNTIF(event_date IS NOT NULL) * 100.0 / COUNT(*), 2) AS event_date,
 ROUND(COUNTIF(event_name IS NOT NULL) * 100.0 / COUNT(*), 2) AS event_name,
 ROUND(COUNTIF(event_value_in_usd IS NOT NULL) * 100.0 / COUNT(*), 2) AS event_event_value_in_usd,
-ROUND(COUNTIF(event_server_timestamp_offset IS NOT NULL) * 100.0 / COUNT(*), 2) AS event_server_timestamp_offset
+ROUND(COUNTIF(event_server_timestamp_offset IS NOT NULL) * 100.0 / COUNT(*), 2) AS event_server_timestamp_offset,
+ROUND(COUNTIF(event_params.key IS NOT NULL) * 100.0 / COUNT(*), 2) AS event_params_key,
+ROUND(COUNTIF(event_params.value IS NOT NULL) * 100.0 / COUNT(*), 2) AS event_params_value,
+ROUND(COUNTIF(event_params.value.string_value IS NOT NULL) * 100.0 / COUNT(*), 2) AS event_params_value_string_value,
+ROUND(COUNTIF(event_params.value.int_value IS NOT NULL) * 100.0 / COUNT(*), 2) AS event_params_value_int_value,
+ROUND(COUNTIF(event_params.value.double_value IS NOT NULL) * 100.0 / COUNT(*), 2) AS event_params_value_double_value,
+ROUND(COUNTIF(event_params.value.float_value IS NOT NULL) * 100.0 / COUNT(*), 2) AS event_params_value_float_value,
 FROM `project.analytics_123.events_*`
-  UNNEST(event_params) AS events,
-  UNNEST(items) AS items
+  UNNEST(event_params) AS event_params
 WHERE
   regexp_extract(_table_suffix, '[0-9]+') BETWEEN format_date('%Y%m%d', current_date() - 1) AND format_date('%Y%m%d', current_date())
   group by event_name
@@ -142,8 +147,6 @@ ROUND(COUNTIF(geo.region IS NOT NULL) * 100.0 / COUNT(*), 2) AS geo_region,
 ROUND(COUNTIF(geo.sub_continent IS NOT NULL) * 100.0 / COUNT(*), 2) AS geo_sub_continent,
 ROUND(COUNTIF(geo.metro IS NOT NULL) * 100.0 / COUNT(*), 2) AS geo_metro,
 FROM `project.analytics_123.events_*`
-  UNNEST(event_params) AS events,
-  UNNEST(items) AS items
 WHERE
   regexp_extract(_table_suffix, '[0-9]+') BETWEEN format_date('%Y%m%d', current_date() - 1) AND format_date('%Y%m%d', current_date())
   group by event_name
@@ -189,7 +192,6 @@ WHERE
   group by event_name
 order by 1
 limit 100
-
 ```
 
 
