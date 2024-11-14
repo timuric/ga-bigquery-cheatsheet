@@ -115,9 +115,11 @@ select
 event_name,
 COUNT(*) as event_count,
 ROUND(COUNTIF(events.value.double_value IS NOT NULL) * 100.0 / COUNT(*), 2) AS events_value_double_value,
-ROUND(COUNTIF(event_timestamp IS NOT NULL) * 100.0 / COUNT(*), 2) AS event_timestamp_null_check,
-ROUND(COUNTIF(event_date IS NOT NULL) * 100.0 / COUNT(*), 2) AS event_date_null_check,
-ROUND(COUNTIF(event_name IS NOT NULL) * 100.0 / COUNT(*), 2) AS event_name_null_check
+ROUND(COUNTIF(event_timestamp IS NOT NULL) * 100.0 / COUNT(*), 2) AS event_timestamp,
+ROUND(COUNTIF(event_date IS NOT NULL) * 100.0 / COUNT(*), 2) AS event_date,
+ROUND(COUNTIF(event_name IS NOT NULL) * 100.0 / COUNT(*), 2) AS event_name,
+ROUND(COUNTIF(event_value_in_usd IS NOT NULL) * 100.0 / COUNT(*), 2) AS event_event_value_in_usd,
+ROUND(COUNTIF(event_server_timestamp_offset IS NOT NULL) * 100.0 / COUNT(*), 2) AS event_server_timestamp_offset
 FROM `project.analytics_123.events_*`
   UNNEST(event_params) AS events,
   UNNEST(items) AS items
@@ -134,11 +136,11 @@ Geo:
 select 
 event_name,
 COUNT(*) as event_count,
-ROUND(COUNTIF(geo.continent IS NOT NULL) * 100.0 / COUNT(*), 2) AS geo_continent_null_check,
-ROUND(COUNTIF(geo.country IS NOT NULL) * 100.0 / COUNT(*), 2) AS geo_country_null_check,
-ROUND(COUNTIF(geo.region IS NOT NULL) * 100.0 / COUNT(*), 2) AS geo_region_null_check,
-ROUND(COUNTIF(geo.sub_continent IS NOT NULL) * 100.0 / COUNT(*), 2) AS geo_sub_continent_null_check,
-ROUND(COUNTIF(geo.metro IS NOT NULL) * 100.0 / COUNT(*), 2) AS geo_metro_null_check,
+ROUND(COUNTIF(geo.continent IS NOT NULL) * 100.0 / COUNT(*), 2) AS geo_continent,
+ROUND(COUNTIF(geo.country IS NOT NULL) * 100.0 / COUNT(*), 2) AS geo_country,
+ROUND(COUNTIF(geo.region IS NOT NULL) * 100.0 / COUNT(*), 2) AS geo_region,
+ROUND(COUNTIF(geo.sub_continent IS NOT NULL) * 100.0 / COUNT(*), 2) AS geo_sub_continent,
+ROUND(COUNTIF(geo.metro IS NOT NULL) * 100.0 / COUNT(*), 2) AS geo_metro,
 FROM `project.analytics_123.events_*`
   UNNEST(event_params) AS events,
   UNNEST(items) AS items
@@ -172,15 +174,15 @@ Device:
 select 
 event_name,
 COUNT(*) as event_count,
-ROUND(COUNTIF(device.operating_system IS NOT NULL) * 100.0 / COUNT(*), 2) AS device_operating_system_null_check,
-ROUND(COUNTIF(device.mobile_brand_name IS NOT NULL) * 100.0 / COUNT(*), 2) AS device_mobile_brand_name_null_check,
-ROUND(COUNTIF(device.mobile_model_name IS NOT NULL) * 100.0 / COUNT(*), 2) AS device_mobile_model_name_null_check,
-ROUND(COUNTIF(device.mobile_marketing_name IS NOT NULL) * 100.0 / COUNT(*), 2) AS device_mobile_marketing_name_null_check,
-ROUND(COUNTIF(device.mobile_os_hardware_model IS NOT NULL) * 100.0 / COUNT(*), 2) AS device_mobile_os_hardware_model_null_check,
-ROUND(COUNTIF(device.advertising_id IS NOT NULL) * 100.0 / COUNT(*), 2) AS device_advertising_id_null_check,
-ROUND(COUNTIF(device.browser IS NOT NULL) * 100.0 / COUNT(*), 2) AS device_browser_null_check,
-ROUND(COUNTIF(device.browser_version IS NOT NULL) * 100.0 / COUNT(*), 2) AS device_browser_version_null_check,
-ROUND(COUNTIF(device.is_limited_ad_tracking IS NOT NULL) * 100.0 / COUNT(*), 2) AS device_is_limited_ad_tracking_null_check
+ROUND(COUNTIF(device.operating_system IS NOT NULL) * 100.0 / COUNT(*), 2) AS device_operating_system,
+ROUND(COUNTIF(device.mobile_brand_name IS NOT NULL) * 100.0 / COUNT(*), 2) AS device_mobile_brand_name,
+ROUND(COUNTIF(device.mobile_model_name IS NOT NULL) * 100.0 / COUNT(*), 2) AS device_mobile_model_name,
+ROUND(COUNTIF(device.mobile_marketing_name IS NOT NULL) * 100.0 / COUNT(*), 2) AS device_mobile_marketing_name,
+ROUND(COUNTIF(device.mobile_os_hardware_model IS NOT NULL) * 100.0 / COUNT(*), 2) AS device_mobile_os_hardware_model,
+ROUND(COUNTIF(device.advertising_id IS NOT NULL) * 100.0 / COUNT(*), 2) AS device_advertising_id,
+ROUND(COUNTIF(device.browser IS NOT NULL) * 100.0 / COUNT(*), 2) AS device_browser,
+ROUND(COUNTIF(device.browser_version IS NOT NULL) * 100.0 / COUNT(*), 2) AS device_browser_version,
+ROUND(COUNTIF(device.is_limited_ad_tracking IS NOT NULL) * 100.0 / COUNT(*), 2) AS device_is_limited_ad_tracking
 FROM `project.analytics_123.events_*`
 WHERE
   regexp_extract(_table_suffix, '[0-9]+') BETWEEN format_date('%Y%m%d', current_date() - 1) AND format_date('%Y%m%d', current_date())
