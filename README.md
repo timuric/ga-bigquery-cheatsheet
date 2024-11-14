@@ -67,7 +67,6 @@ ROUND(COUNTIF(items.promotion_name IS NOT NULL) * 100.0 / COUNT(*),2 ) as items_
 ROUND(COUNTIF(items.creative_name IS NOT NULL) * 100.0 / COUNT(*),2 ) as items_creative_name,
 ROUND(COUNTIF(items.creative_slot IS NOT NULL) * 100.0 / COUNT(*),2 ) as items_creative_slot
 FROM `project.analytics_123.events_*`
-  UNNEST(event_params) AS events,
   UNNEST(items) AS items
 WHERE
   regexp_extract(_table_suffix, '[0-9]+') BETWEEN format_date('%Y%m%d', current_date() - 1) AND format_date('%Y%m%d', current_date())
