@@ -203,7 +203,7 @@ limit 100
 ```
 ### Funnel Analysis
 
-#### Checkout by Basket Size
+#### Checkout by Item Quantity
 ```sql
 with t as (
 SELECT
@@ -238,6 +238,66 @@ SELECT
   END) AS purchase
 FROM
   FROM `project.analytics_123.events_*`
+  UNNEST(event_params) AS events
+WHERE
+  regexp_extract(_table_suffix, '[0-9]+') BETWEEN format_date('%Y%m%d', current_date() - 1) AND format_date('%Y%m%d', current_date())
+  AND user_pseudo_id IS NOT NULL
+  AND (
+    event_name = 'begin_checkout'
+    AND events.value.double_value IS NOT NULL
+  )
+  OR event_name IN(
+    'begin_checkout',
+    'add_shipping_info',
+    'add_payment_info',
+    'purchase'
+  )
+GROUP BY
+  1
+order by 1
+)
+select *,
+  round((begin_checkout - add_shipping_info) / begin_checkout * 100, 2) as checkout_to_shipping_drop,
+  round((add_shipping_info - add_payment_info) / add_shipping_info * 100, 2) as shipping_to_payment_drop,
+  round((add_payment_info - purchase) / add_payment_info * 100, 2) as payment_to_purchase_drop
+from `t`;
+```
+
+#### Checkout by Basket Size
+```sql
+with t as (
+SELECT
+  CASE
+    WHEN events.value.double_value < 200 THEN '01. 0-200'
+    WHEN events.value.double_value BETWEEN 200 AND 399 THEN '02. 200-400'
+    WHEN events.value.double_value BETWEEN 400 AND 599 THEN '03. 400-600'
+    WHEN events.value.double_value BETWEEN 600 AND 799 THEN '04. 600-800'
+    WHEN events.value.double_value BETWEEN 800 AND 999 THEN '05. 800-1000'
+    WHEN events.value.double_value BETWEEN 1000 AND 1199 THEN '06. 1000-1200'
+    WHEN events.value.double_value BETWEEN 1200 AND 1399 THEN '07. 1200-1400'
+    WHEN events.value.double_value BETWEEN 1400 AND 1599 THEN '08. 1400-1600'
+    WHEN events.value.double_value BETWEEN 1600 AND 1799 THEN '09. 1600-1800'
+    WHEN events.value.double_value BETWEEN 1800 AND 1999 THEN '10. 1800-2000'
+    ELSE '11. 2000-...'
+  END AS bins,
+  count(DISTINCT CASE
+    WHEN event_name = 'begin_checkout' THEN user_pseudo_id
+    ELSE NULL
+  END) AS begin_checkout,
+  count(DISTINCT CASE
+    WHEN event_name = 'add_shipping_info' THEN user_pseudo_id
+    ELSE NULL
+  END) AS add_shipping_info,
+  count(DISTINCT CASE
+    WHEN event_name = 'add_payment_info' THEN user_pseudo_id
+    ELSE NULL
+  END) AS add_payment_info,
+  count(DISTINCT CASE
+    WHEN event_name = 'purchase' THEN user_pseudo_id
+    ELSE NULL
+  END) AS purchase
+FROM
+  `data-lake-prod-385815.analytics_308152305.events_*`,
   UNNEST(event_params) AS events
 WHERE
   regexp_extract(_table_suffix, '[0-9]+') BETWEEN format_date('%Y%m%d', current_date() - 1) AND format_date('%Y%m%d', current_date())
