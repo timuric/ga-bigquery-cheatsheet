@@ -205,7 +205,7 @@ limit 100
 ```
 ### Funnel Analysis
 
-### Checkout by Device
+#### Checkout by Device
 ```sql
 SELECT
     device.category,
