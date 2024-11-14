@@ -27,14 +27,32 @@ Items:
 select 
 event_name,
 count(*) as event_count,
-ROUND(COUNTIF(items.item_id IS NOT NULL) * 100.0 / COUNT(*), 2) AS items_item_id_null_check,
-ROUND(COUNTIF(items.item_name IS NOT NULL) * 100.0 / COUNT(*), 2) AS items_item_name_null_check,
-ROUND(COUNTIF(items.item_brand IS NOT NULL) * 100.0 / COUNT(*), 2) AS items_item_brand_null_check,
-ROUND(COUNTIF(items.item_category IS NOT NULL) * 100.0 / COUNT(*), 2) AS items_item_category_null_check,
-ROUND(COUNTIF(items.item_category2 IS NOT NULL) * 100.0 / COUNT(*), 2) AS items_item_category2_null_check,
-ROUND(COUNTIF(items.item_list_id IS NOT NULL) * 100.0 / COUNT(*), 2) AS items_item_list_id,
-ROUND(COUNTIF(items.price IS NOT NULL) * 100.0 / COUNT(*), 2) AS items_price_null_check,
-ROUND(COUNTIF(items.quantity IS NOT NULL) * 100.0 / COUNT(*), 2) AS items_quantity_null_check
+ROUND(COUNTIF(items.item_id IS NOT NULL) * 100.0 / COUNT(*),2 ) as items_item_id,
+ROUND(COUNTIF(items.item_name IS NOT NULL) * 100.0 / COUNT(*),2 ) as items_item_name,
+ROUND(COUNTIF(items.item_brand IS NOT NULL) * 100.0 / COUNT(*),2 ) as items_item_brand,
+ROUND(COUNTIF(items.item_variant IS NOT NULL) * 100.0 / COUNT(*),2 ) as items_item_variant,
+ROUND(COUNTIF(items.item_category IS NOT NULL) * 100.0 / COUNT(*),2 ) as items_item_category,
+ROUND(COUNTIF(items.item_category2 IS NOT NULL) * 100.0 / COUNT(*),2 ) as items_item_category2,
+ROUND(COUNTIF(items.item_category3 IS NOT NULL) * 100.0 / COUNT(*),2 ) as items_item_category3,
+ROUND(COUNTIF(items.item_category4 IS NOT NULL) * 100.0 / COUNT(*),2 ) as items_item_category4,
+ROUND(COUNTIF(items.item_category5 IS NOT NULL) * 100.0 / COUNT(*),2 ) as items_item_category5,
+ROUND(COUNTIF(items.price_in_usd IS NOT NULL) * 100.0 / COUNT(*),2 ) as items_price_in_usd,
+ROUND(COUNTIF(items.price IS NOT NULL) * 100.0 / COUNT(*),2 ) as items_price,
+ROUND(COUNTIF(items.quantity IS NOT NULL) * 100.0 / COUNT(*),2 ) as items_quantity,
+ROUND(COUNTIF(items.item_revenue_in_usd IS NOT NULL) * 100.0 / COUNT(*),2 ) as items_item_revenue_in_usd,
+ROUND(COUNTIF(items.item_revenue IS NOT NULL) * 100.0 / COUNT(*),2 ) as items_item_revenue,
+ROUND(COUNTIF(items.item_refund_in_usd IS NOT NULL) * 100.0 / COUNT(*),2 ) as items_item_refund_in_usd,
+ROUND(COUNTIF(items.item_refund IS NOT NULL) * 100.0 / COUNT(*),2 ) as items_item_refund,
+ROUND(COUNTIF(items.coupon IS NOT NULL) * 100.0 / COUNT(*),2 ) as items_coupon,
+ROUND(COUNTIF(items.affiliation IS NOT NULL) * 100.0 / COUNT(*),2 ) as items_affiliation,
+ROUND(COUNTIF(items.location_id IS NOT NULL) * 100.0 / COUNT(*),2 ) as items_location_id,
+ROUND(COUNTIF(items.item_list_id IS NOT NULL) * 100.0 / COUNT(*),2 ) as items_item_list_id,
+ROUND(COUNTIF(items.item_list_name IS NOT NULL) * 100.0 / COUNT(*),2 ) as items_item_list_name,
+ROUND(COUNTIF(items.item_list_index IS NOT NULL) * 100.0 / COUNT(*),2 ) as items_item_list_index,
+ROUND(COUNTIF(items.promotion_id IS NOT NULL) * 100.0 / COUNT(*),2 ) as items_promotion_id,
+ROUND(COUNTIF(items.promotion_name IS NOT NULL) * 100.0 / COUNT(*),2 ) as items_promotion_name,
+ROUND(COUNTIF(items.creative_name IS NOT NULL) * 100.0 / COUNT(*),2 ) as items_creative_name,
+ROUND(COUNTIF(items.creative_slot IS NOT NULL) * 100.0 / COUNT(*),2 ) as items_creative_slot
 FROM `project.analytics_123.events_*`
   UNNEST(event_params) AS events,
   UNNEST(items) AS items
@@ -52,6 +70,16 @@ select
 event_name,
 count(*) as event_count,
 ROUND(COUNTIF(ecommerce.total_item_quantity IS NOT NULL) * 100.0 / COUNT(*), 2) AS ecommerce_total_item_quantity,
+ROUND(COUNTIF(ecommerce.purchase_revenue_in_usd IS NOT NULL) * 100.0 / COUNT(*), 2) AS ecommerce_purchase_revenue_in_usd,
+ROUND(COUNTIF(ecommerce.purchase_revenue IS NOT NULL) * 100.0 / COUNT(*), 2) AS ecommerce_purchase_revenue,
+ROUND(COUNTIF(ecommerce.refund_value_in_usd IS NOT NULL) * 100.0 / COUNT(*), 2) AS ecommerce_refund_value_in_usd,
+ROUND(COUNTIF(ecommerce.refund_value IS NOT NULL) * 100.0 / COUNT(*), 2) AS ecommerce_refund_value,
+ROUND(COUNTIF(ecommerce.shipping_value_in_usd IS NOT NULL) * 100.0 / COUNT(*), 2) AS ecommerce_shipping_value_in_usd,
+ROUND(COUNTIF(ecommerce.shipping_value IS NOT NULL) * 100.0 / COUNT(*), 2) AS ecommerce_shipping_value,
+ROUND(COUNTIF(ecommerce.tax_value_in_usd IS NOT NULL) * 100.0 / COUNT(*), 2) AS ecommerce_tax_value_in_usd,
+ROUND(COUNTIF(ecommerce.tax_value IS NOT NULL) * 100.0 / COUNT(*), 2) AS ecommerce_value,
+ROUND(COUNTIF(ecommerce.transaction_id IS NOT NULL) * 100.0 / COUNT(*), 2) AS ecommerce_transaction_id,
+ROUND(COUNTIF(ecommerce.unique_items IS NOT NULL) * 100.0 / COUNT(*), 2) AS ecommerce_unique_items,
 FROM `project.analytics_123.events_*`
   UNNEST(event_params) AS events,
 WHERE
@@ -126,9 +154,10 @@ Traffic source:
 select 
 event_name,
 count(*) as event_count,
-ROUND(COUNTIF(traffic_source.source IS NOT NULL) * 100.0 / COUNT(*), 2) AS traffic_source_source
+ROUND(COUNTIF(traffic_source.name IS NOT NULL) * 100.0 / COUNT(*), 2) AS traffic_source_name,
+ROUND(COUNTIF(traffic_source.medium IS NOT NULL) * 100.0 / COUNT(*), 2) AS traffic_source_medium,
+ROUND(COUNTIF(traffic_source.source IS NOT NULL) * 100.0 / COUNT(*), 2) AS traffic_source_source,
 FROM `project.analytics_123.events_*`
-  UNNEST(event_params) AS events
 WHERE
   regexp_extract(_table_suffix, '[0-9]+') BETWEEN format_date('%Y%m%d', current_date() - 1) AND format_date('%Y%m%d', current_date())
   group by event_name
