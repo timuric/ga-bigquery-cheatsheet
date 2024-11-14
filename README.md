@@ -297,8 +297,7 @@ SELECT
     WHEN event_name = 'purchase' THEN user_pseudo_id
     ELSE NULL
   END) AS purchase
-FROM
-  `data-lake-prod-385815.analytics_308152305.events_*`,
+FROM `project.analytics_123.events_*`
   UNNEST(event_params) AS events
 WHERE
   regexp_extract(_table_suffix, '[0-9]+') BETWEEN format_date('%Y%m%d', current_date() - 1) AND format_date('%Y%m%d', current_date())
