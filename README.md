@@ -204,6 +204,69 @@ limit 100
 ```
 ### Funnel Analysis
 
+### Checkout by Device
+```
+-- round numbers to 2 percision
+SELECT
+    device.category,
+    count(DISTINCT CASE
+      WHEN event_name = 'minicart_click' THEN user_pseudo_id
+      ELSE NULL
+    END) AS minicart_click,
+    count(DISTINCT CASE
+      WHEN event_name = 'begin_checkout' THEN user_pseudo_id
+      ELSE NULL
+    END) AS begin_checkout,
+    count(DISTINCT CASE
+      WHEN event_name = 'add_shipping_info' THEN user_pseudo_id
+      ELSE NULL
+    END) AS add_shipping_info,
+    count(DISTINCT CASE
+      WHEN event_name = 'add_payment_info' THEN user_pseudo_id
+      ELSE NULL
+    END) AS add_payment_info,
+    count(DISTINCT CASE
+      WHEN event_name = 'purchase' THEN user_pseudo_id
+      ELSE NULL
+    END) AS purchase,
+    ROUND((count(DISTINCT CASE
+      WHEN event_name = 'begin_checkout' THEN user_pseudo_id
+      ELSE NULL
+    END) / count(DISTINCT CASE
+      WHEN event_name = 'minicart_click' THEN user_pseudo_id
+      ELSE NULL
+    END)) * 100, 2) AS begin_checkout_percentage,
+    ROUND((count(DISTINCT CASE
+      WHEN event_name = 'add_shipping_info' THEN user_pseudo_id
+      ELSE NULL
+    END) / count(DISTINCT CASE
+      WHEN event_name = 'begin_checkout' THEN user_pseudo_id
+      ELSE NULL
+    END)) * 100, 2) AS add_shipping_info_percentage,
+    ROUND((count(DISTINCT CASE
+      WHEN event_name = 'add_payment_info' THEN user_pseudo_id
+      ELSE NULL
+    END) / count(DISTINCT CASE
+      WHEN event_name = 'add_shipping_info' THEN user_pseudo_id
+      ELSE NULL
+    END)) * 100, 2) AS add_payment_info_percentage,
+    ROUND((count(DISTINCT CASE
+      WHEN event_name = 'purchase' THEN user_pseudo_id
+      ELSE NULL
+    END) / count(DISTINCT CASE
+      WHEN event_name = 'add_payment_info' THEN user_pseudo_id
+      ELSE NULL
+    END)) * 100, 2) AS purchase_percentage
+  FROM `project.analytics_123.events_*`
+  WHERE regexp_extract(_table_suffix, '[0-9]+') BETWEEN format_date('%Y%m%d', current_date() - 30) AND format_date('%Y%m%d', current_date())
+  and user_pseudo_id is not null
+  and event_name IN(
+    'minicart_click', 'begin_checkout', 'add_shipping_info', 'add_payment_info', 'purchase'
+  )
+  and device.category in ('mobile', 'desktop','tablet')
+  group by device.category;
+```
+
 #### Checkout by Item Quantity
 ```sql
 with t as (
