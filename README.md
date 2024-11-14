@@ -1,4 +1,4 @@
-# Google analytics cookbook for Bigquery
+# Google Analytics Cookbook for BigQuery
 Cheat sheet for Bigquery using Google Analytics dataset
 
 ## Dates ranges
